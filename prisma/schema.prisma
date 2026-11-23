@@ -1,0 +1,73 @@
+// Prisma schema for Mock Tracker app
+// https://pris.ly/d/prisma-schema
+//
+// The datasource provider is switched automatically by scripts/sync-schema-provider.mjs
+// based on the DATABASE_URL scheme:
+//   - "file:..."  → sqlite   (local dev)
+//   - "postgres..." → postgresql (Vercel / production)
+// The `provider` line below is the default for local dev and may be rewritten
+// by the postinstall hook before `prisma generate` runs.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+/// One row per candidate in the Mock Tracker sheet.
+model Candidate {
+  id              String   @id @default(cuid())
+  candidateName   String
+  expert          String
+  teamLead        String   @default("Ravikant Raj")
+  resumeStatus    String   @default("pending")
+  mockReportSent  String   @default("No")
+  createdAt       String?
+  updatedAt       String?
+  score           String?
+  communication   String?
+  technicalKnowledge String?
+  coding          String?
+  mock1Done       String?
+  mock1Recording  String?
+  mock1Feedback   String?
+  mock1NextDate   String?
+
+  mock2Done       String?
+  mock2Recording  String?
+  mock2Feedback   String?
+  mock2NextDate   String?
+  mock2DelayReason String?
+
+  mock3Done       String?
+  mock3Recording  String?
+  mock3Feedback   String?
+  mock3NextDate   String?
+  mock3DelayReason String?
+  reasonNotDone   String?
+  feedback        String?
+  dbCreatedAt     DateTime @default(now())
+  dbUpdatedAt     DateTime @updatedAt
+
+  @@index([expert])
+  @@index([score])
+  @@index([resumeStatus])
+}
+
+model Setting {
+  key   String @id
+  value String
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  role         String   @default("expert")
+  passwordHash String
+  expertEmail  String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
